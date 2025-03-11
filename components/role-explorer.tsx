@@ -4,6 +4,7 @@ import { useState } from "react"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Button } from "@/components/ui/button"
 import RoleCard from "./role-card"
+import RoleDetail from "./role-detail"
 
 const categories = [
   "All",
@@ -113,18 +114,40 @@ const roles = [
   },
 ];
 
-
+interface Role {
+  id: number
+  title: string
+  description: string
+  interests: string
+  salary: number
+  openings: number
+  credentials: string[]
+  category: string
+}
 
 export default function RoleExplorer() {
   const [level, setLevel] = useState("Beginner")
   const [category, setCategory] = useState("All")
+  const [selectedRole, setSelectedRole] = useState<Role | null>(null)
 
   const filteredRoles = roles.filter((role) => category === "All" || role.category === category)
+
+  const handleRoleSelect = (role: Role) => {
+    setSelectedRole(role)
+  }
+
+  const handleBackToRoles = () => {
+    setSelectedRole(null)
+  }
+
+  if (selectedRole) {
+    return <RoleDetail role={selectedRole} onBack={handleBackToRoles} />
+  }
 
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-2xl font-bold text-[#1a0b47] mb-2">Explore roles</h1>
+        <h1 className="text-2xl font-bold text-[#1a0b47] mb-2">Role Explorer</h1>
         <p className="text-muted-foreground">
           Advance in your career with recognized credentials across levels. Choose from 40+ roles
         </p>
@@ -148,7 +171,9 @@ export default function RoleExplorer() {
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {filteredRoles.map((role) => (
-          <RoleCard key={role.id} role={role} />
+          <div key={role.id} onClick={() => handleRoleSelect(role)} className="cursor-pointer">
+            <RoleCard role={role} />
+          </div>
         ))}
       </div>
     </div>

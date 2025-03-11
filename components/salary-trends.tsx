@@ -189,53 +189,8 @@ export default function SalaryTrends() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row gap-4 sm:items-center justify-between">
-        <h2 className="text-xl font-semibold">Job & salary trends</h2>
-        <Select value={selectedIndustry} onValueChange={setSelectedIndustry}>
-          <SelectTrigger className="w-[300px]">
-            <SelectValue placeholder="Select an industry" />
-          </SelectTrigger>
-          <SelectContent>
-            {industries.map((industry) => (
-              <SelectItem key={industry} value={industry}>
-                {industry}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-
-      <div className="border rounded-lg">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-[200px]">Industry</TableHead>
-              <TableHead className="w-[200px]">Job title</TableHead>
-              <TableHead className="w-[150px]">Growth rate</TableHead>
-              <TableHead className="w-[150px]">Average salary</TableHead>
-              <TableHead className="w-[100px]"></TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {jobTrends.map((job, index) => (
-              <TableRow key={index} className="cursor-pointer" onClick={() => toggleRow(index)}>
-                <TableCell className="font-medium">{job.industry}</TableCell>
-                <TableCell className="text-blue-600 hover:underline">{job.title}</TableCell>
-                <TableCell>
-                  <div className="flex items-center gap-1 text-green-600">
-                    <ArrowUpIcon className="w-4 h-4" />
-                    {job.growth}%
-                  </div>
-                </TableCell>
-                <TableCell>${job.salary.toLocaleString()}</TableCell>
-                <TableCell>
-                  {expandedRow === index ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
+   
+       
 
       {expandedRow !== null && (
         <div className="mt-4 p-6 bg-gray-50 rounded-lg">

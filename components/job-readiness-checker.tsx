@@ -29,29 +29,7 @@ export default function JobReadinessChecker() {
 
   return (
     <div className="space-y-8">
-      <div>
-        <h2 className="text-3xl font-bold text-[#1a0b47] mb-4">Job Readiness Checker</h2>
-        <p className="text-muted-foreground">
-          Add a LinkedIn or MyCareersFuture job posting to analyze how your skills fit the job. You&apos;ll need to add
-          more information for jobs found on other websites.{" "}
-          <a href="#" className="text-blue-600 hover:underline">
-            Learn more
-          </a>
-        </p>
-      </div>
-
-      <form onSubmit={analyzeJob} className="flex gap-4 items-start">
-        <Input
-          type="url"
-          placeholder="Example: https://linkedin.com/jobs..."
-          value={jobUrl}
-          onChange={(e) => setJobUrl(e.target.value)}
-          className="flex-grow"
-        />
-        <Button type="submit" disabled={loading} className="bg-blue-600 hover:bg-blue-700">
-          {loading ? "Analyzing..." : "Get report"}
-        </Button>
-      </form>
+     
     </div>
   )
 }
