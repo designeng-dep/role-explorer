@@ -71,22 +71,7 @@ export default function JobCompatibility({
         </div>
       </section>
 
-      <section>
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-semibold">Skills in your Skills Passport Profile</h2>
-          <Button variant="ghost" size="icon">
-            <Plus className="w-4 h-4" />
-          </Button>
-        </div>
-        <div className="flex flex-wrap gap-3">
-          {userSkills.map((skill) => (
-            <Button key={skill} variant="outline" className="h-auto py-2 px-4">
-              {skill}
-              <Plus className="w-4 h-4 ml-2" />
-            </Button>
-          ))}
-        </div>
-      </section>
+     
     </div>
   )
 }

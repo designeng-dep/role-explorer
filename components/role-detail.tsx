@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useMemo } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -155,13 +155,280 @@ const mockUserSkills = [
   "Python", "TensorFlow", "Machine Learning", "Deep Learning", "Computer Vision"
 ];
 
+// Role-specific skills data generator
+const generateRoleSpecificData = (role: Role) => {
+  // Default skills if none provided
+  const skills = role.skills || {
+    technical: ["Python", "TensorFlow", "Machine Learning", "Deep Learning", "Neural Networks", "NLP", "Computer Vision"],
+    soft: ["Problem Solving", "Critical Thinking", "Communication", "Teamwork", "Adaptability"]
+  };
+  
+  // Generate matched skills based on role category and title
+  const matchedSkills = [];
+  const missingSkills = [];
+  
+  // Digital & IT roles
+  if (role.category === "Digital & IT") {
+    if (role.title.includes("AI")) {
+      matchedSkills.push(
+        { skill: "Python", level: "Advanced", details: "Core programming language for AI development" },
+        { skill: "Machine Learning", level: "Intermediate", details: "Building and training ML models" },
+        { skill: "Deep Learning", level: "Intermediate", details: "Neural network architecture and training" }
+      );
+      missingSkills.push(
+        { skill: "Kubernetes", level: "Beginner", details: "Container orchestration for AI deployments" },
+        { skill: "MLOps", level: "Intermediate", details: "Operationalizing ML workflows" }
+      );
+    } else if (role.title.includes("Cyber")) {
+      matchedSkills.push(
+        { skill: "Network Security", level: "Advanced", details: "Securing network infrastructure" },
+        { skill: "Threat Analysis", level: "Intermediate", details: "Identifying and analyzing security threats" },
+        { skill: "Security Protocols", level: "Advanced", details: "Implementing security measures" }
+      );
+      missingSkills.push(
+        { skill: "Cloud Security", level: "Intermediate", details: "Securing cloud-based applications and data" },
+        { skill: "Penetration Testing", level: "Advanced", details: "Testing systems for vulnerabilities" }
+      );
+    } else {
+      matchedSkills.push(
+        { skill: "Programming", level: "Intermediate", details: "Software development fundamentals" },
+        { skill: "System Design", level: "Intermediate", details: "Designing IT systems and architecture" }
+      );
+      missingSkills.push(
+        { skill: "Cloud Computing", level: "Intermediate", details: "Working with cloud platforms" },
+        { skill: "DevOps", level: "Beginner", details: "Integrating development and operations" }
+      );
+    }
+  }
+  // Green Economy roles
+  else if (role.category === "Green Economy") {
+    matchedSkills.push(
+      { skill: "Sustainability Analysis", level: "Advanced", details: "Analyzing environmental impact" },
+      { skill: "Environmental Regulations", level: "Intermediate", details: "Understanding green policies and compliance" }
+    );
+    missingSkills.push(
+      { skill: "Carbon Footprint Assessment", level: "Intermediate", details: "Measuring and reducing carbon emissions" },
+      { skill: "Renewable Energy Systems", level: "Beginner", details: "Knowledge of sustainable energy solutions" }
+    );
+  }
+  // Care roles
+  else if (role.category === "Care") {
+    matchedSkills.push(
+      { skill: "Patient Care", level: "Advanced", details: "Providing direct care to patients" },
+      { skill: "Medical Terminology", level: "Intermediate", details: "Understanding healthcare vocabulary" }
+    );
+    missingSkills.push(
+      { skill: "Healthcare Technology", level: "Beginner", details: "Using modern healthcare systems" },
+      { skill: "Care Coordination", level: "Intermediate", details: "Managing patient care across providers" }
+    );
+  }
+  // Data Science & Analytics roles
+  else if (role.category === "Data Science & Analytics") {
+    matchedSkills.push(
+      { skill: "Data Analysis", level: "Advanced", details: "Extracting insights from data" },
+      { skill: "Statistical Methods", level: "Intermediate", details: "Applying statistical techniques" },
+      { skill: "Data Visualization", level: "Advanced", details: "Creating visual representations of data" }
+    );
+    missingSkills.push(
+      { skill: "Big Data Technologies", level: "Intermediate", details: "Working with large-scale data systems" },
+      { skill: "Machine Learning Operations", level: "Beginner", details: "Deploying and monitoring ML models" }
+    );
+  }
+  // Business roles
+  else if (role.category === "Business") {
+    if (role.title.includes("Project Manager")) {
+      matchedSkills.push(
+        { skill: "Project Planning", level: "Advanced", details: "Planning and organizing projects" },
+        { skill: "Team Leadership", level: "Intermediate", details: "Leading project teams effectively" },
+        { skill: "Stakeholder Management", level: "Advanced", details: "Managing relationships with stakeholders" }
+      );
+      missingSkills.push(
+        { skill: "Agile Methodologies", level: "Intermediate", details: "Implementing agile project management" },
+        { skill: "Risk Management", level: "Intermediate", details: "Identifying and mitigating project risks" }
+      );
+    } else if (role.title.includes("E-Commerce")) {
+      matchedSkills.push(
+        { skill: "Digital Marketing", level: "Advanced", details: "Promoting products online" },
+        { skill: "E-commerce Platforms", level: "Intermediate", details: "Managing online stores" },
+        { skill: "Customer Experience", level: "Advanced", details: "Optimizing user journeys" }
+      );
+      missingSkills.push(
+        { skill: "SEO Optimization", level: "Intermediate", details: "Improving search engine visibility" },
+        { skill: "Conversion Rate Optimization", level: "Beginner", details: "Increasing website conversions" }
+      );
+    } else if (role.title.includes("Supply Chain")) {
+      matchedSkills.push(
+        { skill: "Inventory Management", level: "Advanced", details: "Optimizing inventory levels" },
+        { skill: "Logistics Planning", level: "Intermediate", details: "Coordinating transportation and distribution" },
+        { skill: "Supply Chain Analysis", level: "Advanced", details: "Analyzing supply chain performance" }
+      );
+      missingSkills.push(
+        { skill: "Procurement Strategies", level: "Intermediate", details: "Strategic sourcing and vendor management" },
+        { skill: "Supply Chain Technology", level: "Beginner", details: "Using supply chain management software" }
+      );
+    } else {
+      matchedSkills.push(
+        { skill: "Business Strategy", level: "Intermediate", details: "Developing business plans and strategies" },
+        { skill: "Financial Analysis", level: "Intermediate", details: "Analyzing financial data and performance" }
+      );
+      missingSkills.push(
+        { skill: "Market Research", level: "Beginner", details: "Researching market trends and opportunities" },
+        { skill: "Business Development", level: "Intermediate", details: "Growing business through partnerships" }
+      );
+    }
+  }
+  // Default for any other category
+  else {
+    matchedSkills.push(
+      { skill: skills.technical[0] || "Technical Skill", level: "Intermediate", details: "Core technical competency" },
+      { skill: skills.soft[0] || "Soft Skill", level: "Advanced", details: "Essential interpersonal ability" }
+    );
+    missingSkills.push(
+      { skill: "Advanced Technology", level: "Beginner", details: "Emerging technology in this field" },
+      { skill: "Industry Certification", level: "Intermediate", details: "Recognized professional qualification" }
+    );
+  }
+  
+  // Generate role-specific courses
+  const recommendedCourses = [
+    {
+      id: "1",
+      title: `Advanced ${role.title} Skills`,
+      instructor: "Dr. Jane Smith",
+      provider: "Coursera",
+      duration: "8 weeks",
+      thumbnail: "/course1.jpg",
+      rating: 4.7,
+      reviewCount: 1250,
+      studentCount: 15000,
+      badge: "bestseller" as const,
+      socialProof: `Used by professionals at top companies`,
+      level: "Advanced",
+      price: {
+        current: 89,
+        original: 129
+      },
+      link: "#"
+    },
+    {
+      id: "2",
+      title: `${role.category} Fundamentals`,
+      instructor: "John Davis",
+      provider: "Udemy",
+      duration: "6 weeks",
+      thumbnail: "/course2.jpg",
+      rating: 4.5,
+      reviewCount: 850,
+      studentCount: 9000,
+      badge: "hot" as const,
+      socialProof: `Trending among ${role.category} professionals`,
+      level: "Intermediate",
+      price: {
+        current: 69,
+        original: 99
+      },
+      link: "#"
+    }
+  ];
+  
+  // Generate strengths based on technical skills
+  const strengths = skills.technical.slice(0, 3).map(skill => 
+    `Strong foundation in ${skill}`
+  );
+  
+  // Generate areas of improvement based on missing skills
+  const areasOfImprovement = missingSkills.map(item => 
+    `Developing skills in ${item.skill}`
+  );
+  
+  // Required skills combines technical and some additional skills
+  const requiredSkills = [
+    ...skills.technical,
+    ...missingSkills.map(item => item.skill)
+  ];
+  
+  // User skills are a subset of the required skills
+  const userSkills = skills.technical.slice(0, Math.ceil(skills.technical.length * 0.7));
+  
+  return {
+    matchedSkills,
+    missingSkills,
+    recommendedCourses,
+    strengths,
+    areasOfImprovement,
+    requiredSkills,
+    userSkills
+  };
+};
+
 export default function RoleDetail({ role, onBack }: RoleDetailProps) {
-  // Enhance the role with mock data if not provided
+  // Generate role-specific data first
+  const roleSpecificData = useMemo(() => generateRoleSpecificData(role), [role]);
+  
+  // Then enhance the role with the generated data
   const enhancedRole = {
     ...role,
     skills: role.skills || mockSkills,
-    courses: role.courses || mockCourses
-  }
+    // Use dynamically generated courses instead of static mockCourses
+    courses: roleSpecificData.recommendedCourses.map((course, index) => ({
+      id: index + 1,
+      title: course.title,
+      provider: course.provider,
+      rating: course.rating,
+      reviewCount: course.reviewCount,
+      duration: course.duration,
+      level: course.level,
+      price: course.price.current,
+      skills: role.category === "Digital & IT" && role.title.includes("AI") 
+        ? ["AI", "Machine Learning", "Neural Networks"] 
+        : role.category === "Digital & IT" && role.title.includes("Cyber")
+        ? ["Network Security", "Threat Analysis", "Security Protocols"]
+        : role.category === "Green Economy"
+        ? ["Sustainability", "Environmental Analysis", "Green Policies"]
+        : role.category === "Care"
+        ? ["Patient Care", "Healthcare Systems", "Medical Terminology"]
+        : role.category === "Data Science & Analytics"
+        ? ["Data Analysis", "Statistical Methods", "Data Visualization"]
+        : role.category === "Business" && role.title.includes("Project Manager")
+        ? ["Project Planning", "Team Leadership", "Stakeholder Management"]
+        : role.category === "Business" && role.title.includes("E-Commerce")
+        ? ["Digital Marketing", "E-commerce Platforms", "Customer Experience"]
+        : role.category === "Business" && role.title.includes("Supply Chain")
+        ? ["Inventory Management", "Logistics Planning", "Supply Chain Analysis"]
+        : ["Business Strategy", "Industry Knowledge", "Professional Skills"]
+    }))
+  };
+
+  // Generate dynamic job market outlook data based on role
+  const jobMarketData = {
+    growthRate: role.category === "Digital & IT" || role.category === "Data Science & Analytics" 
+      ? "+22% (Next 5 Years)" 
+      : role.category === "Green Economy" 
+      ? "+18% (Next 5 Years)"
+      : role.category === "Care"
+      ? "+15% (Next 5 Years)"
+      : "+10% (Next 5 Years)",
+    
+    industryDemand: role.openings > 3000 
+      ? "Very High" 
+      : role.openings > 2000 
+      ? "High" 
+      : role.openings > 1000 
+      ? "Moderate" 
+      : "Steady",
+    
+    competitionLevel: role.category === "Digital & IT" && role.title.includes("AI")
+      ? "High"
+      : role.category === "Digital & IT" && role.title.includes("Cyber")
+      ? "Moderate"
+      : role.category === "Green Economy"
+      ? "Low"
+      : role.category === "Care"
+      ? "Low"
+      : role.category === "Data Science & Analytics"
+      ? "High"
+      : "Moderate"
+  };
 
   return (
     <div className="space-y-8">
@@ -217,7 +484,8 @@ export default function RoleDetail({ role, onBack }: RoleDetailProps) {
             </div>
           </CardContent>
         </Card>
-         
+        
+        
       </section>
 
       {/* Skills Section */}
@@ -257,11 +525,10 @@ export default function RoleDetail({ role, onBack }: RoleDetailProps) {
         </Card>
         
         <SkillsBreakdown 
-          matchedSkills={mockMatchedSkills}
-          missingSkills={mockMissingSkills}
-          recommendedCourses={mockRecommendedCourses}
-        />
-         
+          matchedSkills={roleSpecificData.matchedSkills}
+          missingSkills={roleSpecificData.missingSkills}
+          recommendedCourses={roleSpecificData.recommendedCourses}
+        /> 
       </section>
 
       {/* Courses Section */}
@@ -301,13 +568,9 @@ export default function RoleDetail({ role, onBack }: RoleDetailProps) {
                         <p className="text-sm text-muted-foreground">Level</p>
                         <p className="font-medium">{course.level}</p>
                       </div>
-                    </div>
-                    
-                    <div>
-                      <p className="text-xl font-bold text-[#1a0b47]">${course.price}</p>
-                    </div>
-                    
-                    <Button className="w-full bg-[#1a0b47] hover:bg-[#2d1a6b]">Enroll Now</Button>
+                    </div> 
+                
+                    <Button className="w-full bg-[#1a0b47] hover:bg-[#2d1a6b]">Learn more</Button>
                   </div>
                 </div>
               </CardContent>
