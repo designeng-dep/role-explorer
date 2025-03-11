@@ -533,7 +533,7 @@ export default function RoleDetail({ role, onBack }: RoleDetailProps) {
 
       {/* Courses Section */}
       <section className="space-y-6">
-        <h2 className="text-xl font-bold text-[#1a0b47]">Recommended Courses</h2>
+        <h2 className="text-xl font-bold text-[#1a0b47]">Recommended Courses / Credentials</h2>
         
         <div className="grid gap-6">
           {enhancedRole.courses.map((course) => (

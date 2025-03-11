@@ -16,7 +16,7 @@ export default function CourseList({ selectedSkills }) {
 
   return (
     <div>
-      <h2 className="text-2xl font-semibold mb-4">Recommended Courses</h2>
+      <h2 className="text-2xl font-semibold mb-4">Recommended Courses / Credentials</h2>
       <div className="space-y-4">
         {filteredCourses.map((course) => (
           <Card key={course.id}>
